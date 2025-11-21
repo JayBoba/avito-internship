@@ -1,9 +1,6 @@
 package dataflow
 
-import (
-	"github.com/JayBoba/avito-internship/internal/dataflow"
-	"github.com/JayBoba/avito-internship/internal/entity"
-)
+import "github.com/JayBoba/avito-internship/internal/entity"
 
 // ----- TO DTO -----
 func ToTeamDTO(team *entity.Team) TeamDTO {
@@ -49,7 +46,7 @@ func ToPullRequestDTO(pr *entity.PullRequest) PullRequestDTO {
 	}
 }
 
-func StatusToDTO(status entity.Status) dataflow.Status {
+func StatusToDTO(status entity.Status) Status {
 	switch status {
 	case entity.StatusOpen:
 		return StatusOpen
@@ -81,32 +78,32 @@ func ToTeamMember(teamMemberDTO *TeamMemberDTO) entity.TeamMember {
 	}
 }
 
-func ToUser(user *UserDTO) entity.User {
+func ToUser(userDTO *UserDTO) entity.User {
 	return entity.User{
-		UserID:   user.UserID,
-		Username: user.Username,
-		TeamName: user.TeamName,
-		IsActive: user.IsActive,
+		UserID:   userDTO.UserID,
+		Username: userDTO.Username,
+		TeamName: userDTO.TeamName,
+		IsActive: userDTO.IsActive,
 	}
 }
 
-func ToPullRequest(pr *PullRequestDTO) entity.PullRequest {
-	reviewers := make([]entity.User, len(pr.AssignedReviewers))
-	for i, reviewer := range pr.AssignedReviewers {
+func ToPullRequest(prDTO *PullRequestDTO) entity.PullRequest {
+	reviewers := make([]entity.User, len(prDTO.AssignedReviewers))
+	for i, reviewer := range prDTO.AssignedReviewers {
 		reviewers[i] = ToUser(&reviewer)
 	}
 
 	return entity.PullRequest{
-		PRID:              pr.PRID,
-		PRName:            pr.PRName,
-		AuthorID:          pr.AuthorID,
-		Status:            StatusToEntity(pr.Status),
+		PRID:              prDTO.PRID,
+		PRName:            prDTO.PRName,
+		AuthorID:          prDTO.AuthorID,
+		Status:            StatusToEntity(prDTO.Status),
 		AssignedReviewers: reviewers,
 	}
 }
 
-func StatusToEntity(status Status) entity.Status {
-	switch status {
+func StatusToEntity(statusDTO Status) entity.Status {
+	switch statusDTO {
 	case StatusOpen:
 		return entity.StatusOpen
 	case StatusMerged:
