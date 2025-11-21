@@ -1,7 +1,11 @@
 package dataflow
 
-import "github.com/JayBoba/avito-internship/internal/entity"
+import (
+	"github.com/JayBoba/avito-internship/internal/dataflow"
+	"github.com/JayBoba/avito-internship/internal/entity"
+)
 
+// ----- TO DTO -----
 func ToTeamDTO(team *entity.Team) TeamDTO {
 	membersDTO := make([]TeamMemberDTO, len(team.Members))
 	for i, member := range team.Members {
@@ -18,5 +22,96 @@ func ToTeamMemberDTO(teamMember *entity.TeamMember) TeamMemberDTO {
 		UserID:   teamMember.UserID,
 		Username: teamMember.Username,
 		IsActive: teamMember.IsActive,
+	}
+}
+
+func ToUserDTO(user *entity.User) UserDTO {
+	return UserDTO{
+		UserID:   user.UserID,
+		Username: user.Username,
+		TeamName: user.TeamName,
+		IsActive: user.IsActive,
+	}
+}
+
+func ToPullRequestDTO(pr *entity.PullRequest) PullRequestDTO {
+	reviewersDTO := make([]UserDTO, len(pr.AssignedReviewers))
+	for i, reviewer := range pr.AssignedReviewers {
+		reviewersDTO[i] = ToUserDTO(&reviewer)
+	}
+
+	return PullRequestDTO{
+		PRID:              pr.PRID,
+		PRName:            pr.PRName,
+		AuthorID:          pr.AuthorID,
+		Status:            StatusToDTO(pr.Status),
+		AssignedReviewers: reviewersDTO,
+	}
+}
+
+func StatusToDTO(status entity.Status) dataflow.Status {
+	switch status {
+	case entity.StatusOpen:
+		return StatusOpen
+	case entity.StatusMerged:
+		return StatusMerged
+	default:
+		return StatusUnknown // ЭТОГО В АПИ ПОКА НЕТ НАДО ДУМАТЬ ЧТО ТУТ ДЕЛАТЬ
+	}
+}
+
+//----- TO ENTITY -----
+
+func ToTeam(teamDTO *TeamDTO) entity.Team {
+	members := make([]entity.TeamMember, len(teamDTO.Members))
+	for i, member := range teamDTO.Members {
+		members[i] = ToTeamMember(&member)
+	}
+	return entity.Team{
+		TeamName: teamDTO.TeamName,
+		Members:  members,
+	}
+}
+
+func ToTeamMember(teamMemberDTO *TeamMemberDTO) entity.TeamMember {
+	return entity.TeamMember{
+		UserID:   teamMemberDTO.UserID,
+		Username: teamMemberDTO.Username,
+		IsActive: teamMemberDTO.IsActive,
+	}
+}
+
+func ToUser(user *UserDTO) entity.User {
+	return entity.User{
+		UserID:   user.UserID,
+		Username: user.Username,
+		TeamName: user.TeamName,
+		IsActive: user.IsActive,
+	}
+}
+
+func ToPullRequest(pr *PullRequestDTO) entity.PullRequest {
+	reviewers := make([]entity.User, len(pr.AssignedReviewers))
+	for i, reviewer := range pr.AssignedReviewers {
+		reviewers[i] = ToUser(&reviewer)
+	}
+
+	return entity.PullRequest{
+		PRID:              pr.PRID,
+		PRName:            pr.PRName,
+		AuthorID:          pr.AuthorID,
+		Status:            StatusToEntity(pr.Status),
+		AssignedReviewers: reviewers,
+	}
+}
+
+func StatusToEntity(status Status) entity.Status {
+	switch status {
+	case StatusOpen:
+		return entity.StatusOpen
+	case StatusMerged:
+		return entity.StatusMerged
+	default:
+		return entity.StatusUnknown // ЭТОГО В АПИ ПОКА НЕТ
 	}
 }
