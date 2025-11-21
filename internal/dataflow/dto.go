@@ -31,4 +31,5 @@ type Status string
 const (
 	StatusOpen   Status = "OPEN"
 	StatusMerged Status = "MERGED"
+	StatusUnknown Status = ""
 )

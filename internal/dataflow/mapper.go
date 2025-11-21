@@ -109,6 +109,6 @@ func StatusToEntity(statusDTO Status) entity.Status {
 	case StatusMerged:
 		return entity.StatusMerged
 	default:
-		return entity.StatusUnknown // ЭТОГО В АПИ ПОКА НЕТ
+		return entity.StatusUnknown // ЭТОГО В ПОКА НЕТ. КОСТЫЛЬ. ПУСТАЯ СТРОКА
 	}
 }

@@ -100,6 +100,7 @@ type PullRequest struct {
 type Status string
 
 const (
-	StatusOpen   Status = "OPEN"
-	StatusMerged Status = "MERGED"
+	StatusOpen    Status = "OPEN"
+	StatusMerged  Status = "MERGED"
+	StatusUnknown Status = ""
 )

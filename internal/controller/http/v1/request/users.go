@@ -21,7 +21,10 @@ package request
               user_id: u2
               is_active: false
 */
-
+type SetIsActive struct {
+  UserID string `json:"user_id"`
+  IsActive bool `json:"is_active"`
+}
 /*
   /users/getReview:
     get:
@@ -30,3 +33,5 @@ package request
       parameters:
         - $ref: '#/components/parameters/UserIdQuery'
 */
+type GetReview struct {} //??? 
+
